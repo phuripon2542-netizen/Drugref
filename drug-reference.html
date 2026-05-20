@@ -6,24 +6,24 @@
 <title>รวมยา A–Z</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;--accent:#3d8ef8;--accent2:#5eb8ff;--warn:#f5a623;--green:#4ade80;--red:#f87171;--text:#e2e8f4;--muted:#6b7a99;--font:'IBM Plex Sans Thai',sans-serif;--mono:'IBM Plex Mono',monospace;--radius:8px;--trans:200ms cubic-bezier(.4,0,.2,1)}
+:root{--bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;--accent:#3d8ef8;--accent2:#5eb8ff;--warn:#f5a623;--green:#4ade80;--red:#f87171;--text:#e2e8f4;--muted:#6b7a99;--font:'IBM Plex Sans Thai',sans-serif;--mono:'IBM Plex Mono',monospace;--radius:8px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh}
 .app{display:flex;flex-direction:column;min-height:100vh}
-header{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px}
+header{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px}
 .header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.logo{font-size:18px;font-weight:600;letter-spacing:-.3px;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo{font-size:18px;font-weight:600;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .logo span{font-weight:300}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:auto;transition:background var(--trans)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:auto;transition:background .2s}
 .status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green)}
 .status-dot.error{background:var(--red)}
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px;transition:border-color var(--trans)}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px}
 .search-bar:focus-within{border-color:var(--accent)}
 .search-bar input{background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:13px;width:100%}
 .search-bar input::placeholder{color:var(--muted)}
 .az-nav{display:flex;flex-wrap:wrap;gap:4px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
-.az-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all var(--trans);letter-spacing:.5px}
+.az-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .2s}
 .az-btn:hover{border-color:var(--accent);color:var(--accent2)}
 .az-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .az-btn.has-drugs{border-color:#2a3450;color:#8899bb}
@@ -34,13 +34,13 @@ main{flex:1;padding:0 20px 40px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{color:var(--muted);font-size:13px}
 .letter-section{margin-top:24px}
-.letter-heading{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--accent);letter-spacing:-1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:140px}
-.drug-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden;transition:border-color var(--trans)}
+.letter-heading{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:140px}
+.drug-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden}
 .drug-item:hover{border-color:#2a3860}
-.drug-header{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;transition:background var(--trans)}
+.drug-header{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;transition:background .2s}
 .drug-header:hover{background:var(--surface)}
 .drug-header.open{background:var(--surface2)}
-.drug-toggle-icon{flex-shrink:0;margin-top:2px;color:var(--muted);font-size:10px;transition:transform var(--trans)}
+.drug-toggle-icon{flex-shrink:0;margin-top:2px;color:var(--muted);font-size:10px;transition:transform .2s}
 .drug-header.open .drug-toggle-icon{transform:rotate(90deg)}
 .drug-text{flex:1}
 .drug-name{font-weight:500;color:var(--accent2);font-size:13.5px;line-height:1.4}
@@ -48,18 +48,18 @@ main{flex:1;padding:0 20px 40px}
 .drug-detail-line{color:#8899bb;font-size:12.5px;margin-top:2px}
 .warn-tag{color:var(--warn);font-size:11px}
 .contra{color:var(--red);font-size:11px}
-.drug-notes{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);background:var(--surface);border-top:0 solid var(--border)}
-.drug-notes.open{max-height:2000px;border-top-width:1px;padding:14px 14px 14px 38px}
+.drug-notes{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);background:var(--surface)}
+.drug-notes.open{max-height:3000px;border-top:1px solid var(--border);padding:14px 14px 14px 38px}
 .drug-notes-inner{color:#9aaac8;font-size:12.5px;line-height:1.75}
 .drug-notes-inner p{margin-bottom:8px}
 .no-notes{color:var(--muted);font-size:12px;font-style:italic}
-.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:middle;font-family:var(--mono);letter-spacing:.3px}
+.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px;font-family:var(--mono)}
 .tag-ped{background:#1a3a4a;color:#5eb8ff}
 .tag-neo{background:#1a2a4a;color:#93c5fd}
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-state{text-align:center;padding:40px;color:var(--muted)}
 footer{text-align:center;padding:16px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
 footer a{color:var(--accent);text-decoration:none}
-#scrollTop{position:fixed;bottom:20px;right:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity var(--trans);z-index:50}
+#scrollTop{position:fixed;bottom:20px;right:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity .2s;z-index:50}
 #scrollTop.visible{opacity:1}
 mark{background:#1e3a5f;color:var(--accent2);border-radius:2px;padding:0 1px}
 </style>
@@ -73,7 +73,7 @@ mark{background:#1e3a5f;color:var(--accent2);border-radius:2px;padding:0 1px}
   </div>
   <div class="search-bar">
     <span>🔍</span>
-    <input type="text" id="searchInput" placeholder="ค้นหายา เช่น amoxicillin, paracetamol..." autocomplete="off" spellcheck="false">
+    <input type="text" id="searchInput" placeholder="ค้นหายา เช่น amoxicillin, paracetamol..." autocomplete="off">
   </div>
 </header>
 <nav class="az-nav" id="azNav"></nav>
@@ -87,172 +87,212 @@ mark{background:#1e3a5f;color:var(--accent2);border-radius:2px;padding:0 1px}
 <footer>ข้อมูลซิงค์จาก <a href="https://notion.so" target="_blank">Notion</a> · อัพเดตอัตโนมัติทุกครั้งที่เปิด</footer>
 </div>
 <script>
-const WORKER_URL = "https://drugref.phuripon2542.workers.dev";
-const NOTION_PAGE_ID = "3633eb4d-888d-8030-b01c-cc09a88924d0";
-let allDrugs=[],filteredDrugs=[],activeLetters=new Set(),openDrugId=null,searchQuery="";
+// ← แก้ตรงนี้ถ้าชื่อ Worker เปลี่ยน
+const WORKER = "https://drugref.phuripon2542.workers.dev";
+const PAGE_ID = "3633eb4d-888d-8030-b01c-cc09a88924d0";
 
-document.addEventListener("DOMContentLoaded",async()=>{
+let allDrugs = [], filteredDrugs = [], activeLetters = new Set();
+let openId = null, searchQuery = "";
+
+document.addEventListener("DOMContentLoaded", async () => {
   buildAZNav();
   await loadData();
-  document.getElementById("searchInput").addEventListener("input",onSearch);
-  window.addEventListener("scroll",()=>document.getElementById("scrollTop").classList.toggle("visible",window.scrollY>300));
+  document.getElementById("searchInput").addEventListener("input", onSearch);
+  window.addEventListener("scroll", () =>
+    document.getElementById("scrollTop").classList.toggle("visible", window.scrollY > 300));
 });
 
-async function loadData(){
-  const dot=document.getElementById("statusDot");
-  try{
-    const blocks=await fetchBlocks(NOTION_PAGE_ID);
-    allDrugs=parseBlocks(blocks);
-    activeLetters=new Set(allDrugs.map(d=>d.letter.toUpperCase()));
-    dot.className="status-dot live";
-    filteredDrugs=[...allDrugs];
+// ─── LOAD DATA ─────────────────────────────────────────────
+async function loadData() {
+  const dot = document.getElementById("statusDot");
+  try {
+    // Step 1: get top-level toggle blocks (A, B, C...)
+    const topBlocks = await apiGet(`/page/${PAGE_ID}`);
+
+    // Step 2: for each letter toggle, fetch its children (drug lines)
+    const drugs = [];
+    let uid = 0;
+    for (const b of topBlocks.results || []) {
+      if (b.type !== "toggle") continue;
+      const letter = getText(b.toggle.rich_text).trim().replace(/[^a-zA-Z]/g, "").charAt(0).toUpperCase();
+      if (!letter) continue;
+
+      // Fetch children of this letter toggle
+      const childData = await apiGet(`/children/${b.id}`);
+      for (const child of childData.results || []) {
+        const drug = parseDrug(child, letter, uid++);
+        if (drug) drugs.push(drug);
+      }
+    }
+
+    allDrugs = drugs;
+    activeLetters = new Set(drugs.map(d => d.letter));
+    dot.className = "status-dot live";
+    filteredDrugs = [...allDrugs];
     renderAll();
-  }catch(e){
-    dot.className="status-dot error";
-    document.getElementById("loadingScreen").innerHTML=
+  } catch (e) {
+    dot.className = "status-dot error";
+    document.getElementById("loadingScreen").innerHTML =
       `<div style="font-size:32px">⚠️</div>
        <p style="color:#f87171">โหลดไม่สำเร็จ: ${e.message}</p>
-       <p style="color:#6b7a99;font-size:12px;margin-top:8px">ตรวจสอบ Worker และ Notion Token</p>`;
+       <p style="color:#6b7a99;font-size:12px;margin-top:8px">ตรวจสอบ Worker และ Token</p>`;
   }
 }
 
-async function fetchBlocks(pageId){
-  const res=await fetch(`${WORKER_URL}/page/${pageId}`);
-  if(!res.ok)throw new Error(`HTTP ${res.status}`);
+async function apiGet(path) {
+  const res = await fetch(WORKER + path);
+  if (!res.ok) throw new Error("HTTP " + res.status);
   return res.json();
 }
 
-function parseBlocks(blocks){
-  const drugs=[];let uid=0;
-  for(const b of blocks){
-    if(b.type==="toggle"){
-      const letter=getText(b.toggle.rich_text).trim().replace(/[^a-zA-Z]/g,"").charAt(0).toUpperCase();
-      if(!letter)continue;
-      for(const child of b.children||[]){
-        const d=parseDrugBlock(child,letter,uid++);
-        if(d)drugs.push(d);
-      }
-    }
-  }
-  return drugs;
-}
+// ─── PARSE DRUG BLOCK ───────────────────────────────────────
+function parseDrug(block, letter, uid) {
+  const types = ["bulleted_list_item","numbered_list_item","paragraph","toggle"];
+  if (!types.includes(block.type)) return null;
+  const raw = getText(block[block.type]?.rich_text || []);
+  if (!raw.trim()) return null;
 
-function parseDrugBlock(block,letter,uid){
-  const types=["bulleted_list_item","numbered_list_item","paragraph","toggle"];
-  if(!types.includes(block.type))return null;
-  const raw=getText(block[block.type]?.rich_text||[]);
-  if(!raw.trim())return null;
-  const boldMatch=raw.match(/\*\*(.+?)\*\*/);
-  const brandMatch=raw.match(/\(([^)]+)\)/);
-  const drug={
-    id:`drug-${uid}`,letter,raw,
-    name:boldMatch?boldMatch[1]:raw.split(/[\s(]/)[0],
-    brand:brandMatch?brandMatch[1]:"",
-    isPed:/\[Ped\]/i.test(raw),
-    isNeo:/\[Neonatal\]|\[Neo\]/i.test(raw),
-    notes:[]
+  const boldMatch = raw.match(/\*\*(.+?)\*\*/);
+  const brandMatch = raw.match(/\(([^)]+)\)/);
+  const drug = {
+    id: "d" + uid, letter, raw,
+    name: boldMatch ? boldMatch[1] : raw.split(/[\s(]/)[0],
+    brand: brandMatch ? brandMatch[1] : "",
+    isPed: /\[Ped\]/i.test(raw),
+    isNeo: /\[Neonatal\]|\[Neo\]/i.test(raw),
+    blockId: block.id,
+    notesLoaded: false,
+    notes: []
   };
-  drug.displayLine=raw.replace(/\*\*/g,"")
-    .replace(/⚠️/g,'<span class="warn-tag">⚠️</span>')
-    .replace(/❌/g,'<span class="contra">❌</span>');
-  for(const child of block.children||[]){
-    if(["toggle","bulleted_list_item","paragraph","numbered_list_item"].includes(child.type)){
-      const t=getText(child[child.type]?.rich_text||[]);
-      if(t.trim())drug.notes.push(t);
-      for(const sub of child.children||[]){
-        const s=getText(sub[sub.type]?.rich_text||[]);
-        if(s.trim())drug.notes.push("  "+s);
-      }
-    }
-  }
+  drug.displayLine = raw.replace(/\*\*/g, "")
+    .replace(/⚠️/g, '<span class="warn-tag">⚠️</span>')
+    .replace(/❌/g, '<span class="contra">❌</span>');
   return drug;
 }
 
-function getText(r){return(r||[]).map(x=>x.plain_text||"").join("")}
+function getText(r) { return (r || []).map(x => x.plain_text || "").join(""); }
 
-function renderAll(){
+// ─── RENDER ─────────────────────────────────────────────────
+function renderAll() {
   updateAZNav();
-  const main=document.getElementById("mainContent");
-  const byLetter={};
-  for(const d of filteredDrugs){
-    const L=d.letter.toUpperCase();
-    if(!byLetter[L])byLetter[L]=[];
-    byLetter[L].push(d);
+  const main = document.getElementById("mainContent");
+  const byL = {};
+  for (const d of filteredDrugs) {
+    if (!byL[d.letter]) byL[d.letter] = [];
+    byL[d.letter].push(d);
   }
-  if(!filteredDrugs.length){
-    main.innerHTML='<div class="empty-state">💊 ไม่พบยาที่ค้นหา</div>';
+  if (!filteredDrugs.length) {
+    main.innerHTML = '<div class="empty-state">💊 ไม่พบยาที่ค้นหา</div>';
     return;
   }
-  main.innerHTML=Object.keys(byLetter).sort().map(L=>
-    `<section class="letter-section" id="section-${L}">
+  main.innerHTML = Object.keys(byL).sort().map(L =>
+    `<section class="letter-section" id="sec-${L}">
       <div class="letter-heading">${L}</div>
-      ${byLetter[L].map(renderDrug).join("")}
-    </section>`
-  ).join("");
-  main.querySelectorAll(".drug-header").forEach(h=>h.addEventListener("click",()=>toggleDrug(h.dataset.id)));
+      ${byL[L].map(renderDrug).join("")}
+    </section>`).join("");
+  main.querySelectorAll(".drug-header").forEach(h =>
+    h.addEventListener("click", () => toggleDrug(h.dataset.id)));
 }
 
-function renderDrug(d){
-  const tags=(d.isPed?'<span class="tag tag-ped">Ped</span>':'')+(d.isNeo?'<span class="tag tag-neo">Neo</span>':'');
-  const notes=d.notes.length
-    ?d.notes.map(n=>`<p>${escHtml(n)}</p>`).join("")
-    :'<p class="no-notes">ยังไม่มี note — เพิ่มใน toggle ของยานี้ใน Notion แล้ว refresh</p>';
-  return`<div class="drug-item" id="${d.id}">
+function renderDrug(d) {
+  const tags = (d.isPed ? '<span class="tag tag-ped">Ped</span>' : "") +
+               (d.isNeo ? '<span class="tag tag-neo">Neo</span>' : "");
+  return `<div class="drug-item" id="${d.id}">
   <div class="drug-header" data-id="${d.id}">
     <span class="drug-toggle-icon">▶</span>
     <div class="drug-text">
-      <div class="drug-name">${highlightSearch(escHtml(d.name))}${d.brand?` <span class="brand">(${escHtml(d.brand)})</span>`:""}${tags}</div>
-      <div class="drug-detail-line">${highlightSearch(d.displayLine)}</div>
+      <div class="drug-name">${hi(esc(d.name))}${d.brand ? ` <span class="brand">(${esc(d.brand)})</span>` : ""}${tags}</div>
+      <div class="drug-detail-line">${hi(d.displayLine)}</div>
     </div>
   </div>
-  <div class="drug-notes" id="notes-${d.id}"><div class="drug-notes-inner">${notes}</div></div>
+  <div class="drug-notes" id="notes-${d.id}">
+    <div class="drug-notes-inner" id="notesin-${d.id}">
+      <p class="no-notes">กำลังโหลด note...</p>
+    </div>
+  </div>
 </div>`;
 }
 
-function toggleDrug(id){
-  const h=document.querySelector(`.drug-header[data-id="${id}"]`);
-  const n=document.getElementById(`notes-${id}`);
-  const open=h.classList.contains("open");
-  if(openDrugId&&openDrugId!==id){
-    document.querySelector(`.drug-header[data-id="${openDrugId}"]`)?.classList.remove("open");
-    document.getElementById(`notes-${openDrugId}`)?.classList.remove("open");
+// ─── TOGGLE (lazy-load notes) ───────────────────────────────
+async function toggleDrug(id) {
+  const h = document.querySelector(`.drug-header[data-id="${id}"]`);
+  const n = document.getElementById(`notes-${id}`);
+  const isOpen = h.classList.contains("open");
+
+  if (openId && openId !== id) {
+    document.querySelector(`.drug-header[data-id="${openId}"]`)?.classList.remove("open");
+    document.getElementById(`notes-${openId}`)?.classList.remove("open");
   }
-  h.classList.toggle("open",!open);
-  n.classList.toggle("open",!open);
-  openDrugId=open?null:id;
+
+  h.classList.toggle("open", !isOpen);
+  n.classList.toggle("open", !isOpen);
+  openId = isOpen ? null : id;
+
+  // Lazy load notes when opening
+  if (!isOpen) {
+    const drug = allDrugs.find(d => d.id === id);
+    if (drug && !drug.notesLoaded) {
+      drug.notesLoaded = true;
+      try {
+        const data = await apiGet(`/children/${drug.blockId}`);
+        const noteBlocks = data.results || [];
+        const notes = noteBlocks
+          .filter(b => ["toggle","bulleted_list_item","paragraph","numbered_list_item"].includes(b.type))
+          .map(b => getText(b[b.type]?.rich_text || []))
+          .filter(t => t.trim());
+        drug.notes = notes;
+        const el = document.getElementById(`notesin-${id}`);
+        if (el) {
+          el.innerHTML = notes.length
+            ? notes.map(n => `<p>${esc(n)}</p>`).join("")
+            : '<p class="no-notes">ยังไม่มี note — เพิ่มใน Notion แล้ว refresh</p>';
+        }
+      } catch(e) {
+        const el = document.getElementById(`notesin-${id}`);
+        if (el) el.innerHTML = '<p class="no-notes">โหลด note ไม่สำเร็จ</p>';
+      }
+    }
+  }
 }
 
-const LETTERS="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-function buildAZNav(){
-  document.getElementById("azNav").innerHTML=LETTERS.map(L=>`<button class="az-btn" id="az-${L}" onclick="jumpTo('${L}')">${L}</button>`).join("");
+// ─── AZ NAV ─────────────────────────────────────────────────
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+function buildAZNav() {
+  document.getElementById("azNav").innerHTML = LETTERS.map(L =>
+    `<button class="az-btn" id="az-${L}" onclick="jumpTo('${L}')">${L}</button>`).join("");
 }
-function updateAZNav(){
-  LETTERS.forEach(L=>{
-    const btn=document.getElementById(`az-${L}`);
-    if(!btn)return;
-    const has=activeLetters.has(L)&&filteredDrugs.some(d=>d.letter.toUpperCase()===L);
-    btn.classList.toggle("has-drugs",has);
-    btn.disabled=!has;
+function updateAZNav() {
+  LETTERS.forEach(L => {
+    const btn = document.getElementById(`az-${L}`);
+    if (!btn) return;
+    const has = activeLetters.has(L) && filteredDrugs.some(d => d.letter === L);
+    btn.classList.toggle("has-drugs", has);
+    btn.disabled = !has;
   });
 }
-function jumpTo(L){
-  LETTERS.forEach(x=>document.getElementById(`az-${x}`)?.classList.remove("active"));
+function jumpTo(L) {
+  LETTERS.forEach(x => document.getElementById(`az-${x}`)?.classList.remove("active"));
   document.getElementById(`az-${L}`)?.classList.add("active");
-  document.getElementById(`section-${L}`)?.scrollIntoView({behavior:"smooth"});
+  document.getElementById(`sec-${L}`)?.scrollIntoView({ behavior: "smooth" });
 }
-function onSearch(e){
-  searchQuery=e.target.value.trim().toLowerCase();
-  filteredDrugs=searchQuery
-    ?allDrugs.filter(d=>d.name.toLowerCase().includes(searchQuery)||d.brand.toLowerCase().includes(searchQuery)||d.raw.toLowerCase().includes(searchQuery))
-    :[...allDrugs];
-  openDrugId=null;
+
+// ─── SEARCH ─────────────────────────────────────────────────
+function onSearch(e) {
+  searchQuery = e.target.value.trim().toLowerCase();
+  filteredDrugs = searchQuery
+    ? allDrugs.filter(d =>
+        d.name.toLowerCase().includes(searchQuery) ||
+        d.brand.toLowerCase().includes(searchQuery) ||
+        d.raw.toLowerCase().includes(searchQuery))
+    : [...allDrugs];
+  openId = null;
   renderAll();
 }
-function highlightSearch(t){
-  if(!searchQuery)return t;
-  return t.replace(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`,`gi`),"<mark>$1</mark>");
+function hi(t) {
+  if (!searchQuery) return t;
+  return t.replace(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"), "<mark>$1</mark>");
 }
-function escHtml(s){
+function esc(s) {
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 </script>
