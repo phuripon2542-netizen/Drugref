@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รวมยา A–Z</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;--accent:#3d8ef8;--accent2:#5eb8ff;--warn:#f5a623;--green:#4ade80;--red:#f87171;--text:#e2e8f4;--muted:#6b7a99;--font:'IBM Plex Sans Thai',sans-serif;--mono:'IBM Plex Mono',monospace;--radius:8px;--trans:200ms cubic-bezier(.4,0,.2,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh}
+.app{display:flex;flex-direction:column;min-height:100vh}
+header{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.logo{font-size:18px;font-weight:600;letter-spacing:-.3px;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{font-weight:300}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:auto;transition:background var(--trans)}
+.status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green)}
+.status-dot.error{background:var(--red)}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px;transition:border-color var(--trans)}
+.search-bar:focus-within{border-color:var(--accent)}
+.search-bar input{background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:13px;width:100%}
+.search-bar input::placeholder{color:var(--muted)}
+.az-nav{display:flex;flex-wrap:wrap;gap:4px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.az-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all var(--trans);letter-spacing:.5px}
+.az-btn:hover{border-color:var(--accent);color:var(--accent2)}
+.az-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.az-btn.has-drugs{border-color:#2a3450;color:#8899bb}
+.az-btn:disabled{opacity:.3;cursor:default}
+main{flex:1;padding:0 20px 40px}
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
+.spinner{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:var(--muted);font-size:13px}
+.letter-section{margin-top:24px}
+.letter-heading{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--accent);letter-spacing:-1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:140px}
+.drug-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden;transition:border-color var(--trans)}
+.drug-item:hover{border-color:#2a3860}
+.drug-header{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;transition:background var(--trans)}
+.drug-header:hover{background:var(--surface)}
+.drug-header.open{background:var(--surface2)}
+.drug-toggle-icon{flex-shrink:0;margin-top:2px;color:var(--muted);font-size:10px;transition:transform var(--trans)}
+.drug-header.open .drug-toggle-icon{transform:rotate(90deg)}
+.drug-text{flex:1}
+.drug-name{font-weight:500;color:var(--accent2);font-size:13.5px;line-height:1.4}
+.drug-name .brand{font-weight:400;color:var(--muted);font-size:12px}
+.drug-detail-line{color:#8899bb;font-size:12.5px;margin-top:2px}
+.warn-tag{color:var(--warn);font-size:11px}
+.contra{color:var(--red);font-size:11px}
+.drug-notes{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);background:var(--surface);border-top:0 solid var(--border)}
+.drug-notes.open{max-height:2000px;border-top-width:1px;padding:14px 14px 14px 38px}
+.drug-notes-inner{color:#9aaac8;font-size:12.5px;line-height:1.75}
+.drug-notes-inner p{margin-bottom:8px}
+.no-notes{color:var(--muted);font-size:12px;font-style:italic}
+.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:middle;font-family:var(--mono);letter-spacing:.3px}
+.tag-ped{background:#1a3a4a;color:#5eb8ff}
+.tag-neo{background:#1a2a4a;color:#93c5fd}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+footer{text-align:center;padding:16px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
+footer a{color:var(--accent);text-decoration:none}
+#scrollTop{position:fixed;bottom:20px;right:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity var(--trans);z-index:50}
+#scrollTop.visible{opacity:1}
+mark{background:#1e3a5f;color:var(--accent2);border-radius:2px;padding:0 1px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="header-top">
+    <div class="logo">รวมยา <span>A–Z</span></div>
+    <div class="status-dot" id="statusDot"></div>
+  </div>
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="searchInput" placeholder="ค้นหายา เช่น amoxicillin, paracetamol..." autocomplete="off" spellcheck="false">
+  </div>
+</header>
+<nav class="az-nav" id="azNav"></nav>
+<main id="mainContent">
+  <div class="loading-screen" id="loadingScreen">
+    <div class="spinner"></div>
+    <div class="loading-text">กำลังโหลดข้อมูลจาก Notion...</div>
+  </div>
+</main>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<footer>ข้อมูลซิงค์จาก <a href="https://notion.so" target="_blank">Notion</a> · อัพเดตอัตโนมัติทุกครั้งที่เปิด</footer>
+</div>
+<script>
+const WORKER_URL = "https://drugref.phuripon2542.workers.dev";
+const NOTION_PAGE_ID = "3633eb4d-888d-8030-b01c-cc09a88924d0";
+let allDrugs=[],filteredDrugs=[],activeLetters=new Set(),openDrugId=null,searchQuery="";
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  buildAZNav();
+  await loadData();
+  document.getElementById("searchInput").addEventListener("input",onSearch);
+  window.addEventListener("scroll",()=>document.getElementById("scrollTop").classList.toggle("visible",window.scrollY>300));
+});
+
+async function loadData(){
+  const dot=document.getElementById("statusDot");
+  try{
+    const blocks=await fetchBlocks(NOTION_PAGE_ID);
+    allDrugs=parseBlocks(blocks);
+    activeLetters=new Set(allDrugs.map(d=>d.letter.toUpperCase()));
+    dot.className="status-dot live";
+    filteredDrugs=[...allDrugs];
+    renderAll();
+  }catch(e){
+    dot.className="status-dot error";
+    document.getElementById("loadingScreen").innerHTML=
+      `<div style="font-size:32px">⚠️</div>
+       <p style="color:#f87171">โหลดไม่สำเร็จ: ${e.message}</p>
+       <p style="color:#6b7a99;font-size:12px;margin-top:8px">ตรวจสอบ Worker และ Notion Token</p>`;
+  }
+}
+
+async function fetchBlocks(pageId){
+  const res=await fetch(`${WORKER_URL}/page/${pageId}`);
+  if(!res.ok)throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+function parseBlocks(blocks){
+  const drugs=[];let uid=0;
+  for(const b of blocks){
+    if(b.type==="toggle"){
+      const letter=getText(b.toggle.rich_text).trim().replace(/[^a-zA-Z]/g,"").charAt(0).toUpperCase();
+      if(!letter)continue;
+      for(const child of b.children||[]){
+        const d=parseDrugBlock(child,letter,uid++);
+        if(d)drugs.push(d);
+      }
+    }
+  }
+  return drugs;
+}
+
+function parseDrugBlock(block,letter,uid){
+  const types=["bulleted_list_item","numbered_list_item","paragraph","toggle"];
+  if(!types.includes(block.type))return null;
+  const raw=getText(block[block.type]?.rich_text||[]);
+  if(!raw.trim())return null;
+  const boldMatch=raw.match(/\*\*(.+?)\*\*/);
+  const brandMatch=raw.match(/\(([^)]+)\)/);
+  const drug={
+    id:`drug-${uid}`,letter,raw,
+    name:boldMatch?boldMatch[1]:raw.split(/[\s(]/)[0],
+    brand:brandMatch?brandMatch[1]:"",
+    isPed:/\[Ped\]/i.test(raw),
+    isNeo:/\[Neonatal\]|\[Neo\]/i.test(raw),
+    notes:[]
+  };
+  drug.displayLine=raw.replace(/\*\*/g,"")
+    .replace(/⚠️/g,'<span class="warn-tag">⚠️</span>')
+    .replace(/❌/g,'<span class="contra">❌</span>');
+  for(const child of block.children||[]){
+    if(["toggle","bulleted_list_item","paragraph","numbered_list_item"].includes(child.type)){
+      const t=getText(child[child.type]?.rich_text||[]);
+      if(t.trim())drug.notes.push(t);
+      for(const sub of child.children||[]){
+        const s=getText(sub[sub.type]?.rich_text||[]);
+        if(s.trim())drug.notes.push("  "+s);
+      }
+    }
+  }
+  return drug;
+}
+
+function getText(r){return(r||[]).map(x=>x.plain_text||"").join("")}
+
+function renderAll(){
+  updateAZNav();
+  const main=document.getElementById("mainContent");
+  const byLetter={};
+  for(const d of filteredDrugs){
+    const L=d.letter.toUpperCase();
+    if(!byLetter[L])byLetter[L]=[];
+    byLetter[L].push(d);
+  }
+  if(!filteredDrugs.length){
+    main.innerHTML='<div class="empty-state">💊 ไม่พบยาที่ค้นหา</div>';
+    return;
+  }
+  main.innerHTML=Object.keys(byLetter).sort().map(L=>
+    `<section class="letter-section" id="section-${L}">
+      <div class="letter-heading">${L}</div>
+      ${byLetter[L].map(renderDrug).join("")}
+    </section>`
+  ).join("");
+  main.querySelectorAll(".drug-header").forEach(h=>h.addEventListener("click",()=>toggleDrug(h.dataset.id)));
+}
+
+function renderDrug(d){
+  const tags=(d.isPed?'<span class="tag tag-ped">Ped</span>':'')+(d.isNeo?'<span class="tag tag-neo">Neo</span>':'');
+  const notes=d.notes.length
+    ?d.notes.map(n=>`<p>${escHtml(n)}</p>`).join("")
+    :'<p class="no-notes">ยังไม่มี note — เพิ่มใน toggle ของยานี้ใน Notion แล้ว refresh</p>';
+  return`<div class="drug-item" id="${d.id}">
+  <div class="drug-header" data-id="${d.id}">
+    <span class="drug-toggle-icon">▶</span>
+    <div class="drug-text">
+      <div class="drug-name">${highlightSearch(escHtml(d.name))}${d.brand?` <span class="brand">(${escHtml(d.brand)})</span>`:""}${tags}</div>
+      <div class="drug-detail-line">${highlightSearch(d.displayLine)}</div>
+    </div>
+  </div>
+  <div class="drug-notes" id="notes-${d.id}"><div class="drug-notes-inner">${notes}</div></div>
+</div>`;
+}
+
+function toggleDrug(id){
+  const h=document.querySelector(`.drug-header[data-id="${id}"]`);
+  const n=document.getElementById(`notes-${id}`);
+  const open=h.classList.contains("open");
+  if(openDrugId&&openDrugId!==id){
+    document.querySelector(`.drug-header[data-id="${openDrugId}"]`)?.classList.remove("open");
+    document.getElementById(`notes-${openDrugId}`)?.classList.remove("open");
+  }
+  h.classList.toggle("open",!open);
+  n.classList.toggle("open",!open);
+  openDrugId=open?null:id;
+}
+
+const LETTERS="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+function buildAZNav(){
+  document.getElementById("azNav").innerHTML=LETTERS.map(L=>`<button class="az-btn" id="az-${L}" onclick="jumpTo('${L}')">${L}</button>`).join("");
+}
+function updateAZNav(){
+  LETTERS.forEach(L=>{
+    const btn=document.getElementById(`az-${L}`);
+    if(!btn)return;
+    const has=activeLetters.has(L)&&filteredDrugs.some(d=>d.letter.toUpperCase()===L);
+    btn.classList.toggle("has-drugs",has);
+    btn.disabled=!has;
+  });
+}
+function jumpTo(L){
+  LETTERS.forEach(x=>document.getElementById(`az-${x}`)?.classList.remove("active"));
+  document.getElementById(`az-${L}`)?.classList.add("active");
+  document.getElementById(`section-${L}`)?.scrollIntoView({behavior:"smooth"});
+}
+function onSearch(e){
+  searchQuery=e.target.value.trim().toLowerCase();
+  filteredDrugs=searchQuery
+    ?allDrugs.filter(d=>d.name.toLowerCase().includes(searchQuery)||d.brand.toLowerCase().includes(searchQuery)||d.raw.toLowerCase().includes(searchQuery))
+    :[...allDrugs];
+  openDrugId=null;
+  renderAll();
+}
+function highlightSearch(t){
+  if(!searchQuery)return t;
+  return t.replace(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`,`gi`),"<mark>$1</mark>");
+}
+function escHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
