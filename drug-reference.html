@@ -3,297 +3,737 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>รวมยา A–Z</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Drug Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;--accent:#3d8ef8;--accent2:#5eb8ff;--warn:#f5a623;--green:#4ade80;--red:#f87171;--text:#e2e8f4;--muted:#6b7a99;--font:'IBM Plex Sans Thai',sans-serif;--mono:'IBM Plex Mono',monospace;--radius:8px}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh}
-.app{display:flex;flex-direction:column;min-height:100vh}
-header{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px}
-.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.logo{font-size:18px;font-weight:600;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo span{font-weight:300}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:auto;transition:background .2s}
-.status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green)}
-.status-dot.error{background:var(--red)}
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px}
-.search-bar:focus-within{border-color:var(--accent)}
-.search-bar input{background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:13px;width:100%}
-.search-bar input::placeholder{color:var(--muted)}
-.az-nav{display:flex;flex-wrap:wrap;gap:4px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
-.az-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .2s}
-.az-btn:hover{border-color:var(--accent);color:var(--accent2)}
-.az-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.az-btn.has-drugs{border-color:#2a3450;color:#8899bb}
-.az-btn:disabled{opacity:.3;cursor:default}
-main{flex:1;padding:0 20px 40px}
-.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
-.spinner{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{color:var(--muted);font-size:13px}
-.letter-section{margin-top:24px}
-.letter-heading{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:140px}
-.drug-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden}
-.drug-item:hover{border-color:#2a3860}
-.drug-header{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;transition:background .2s}
-.drug-header:hover{background:var(--surface)}
-.drug-header.open{background:var(--surface2)}
-.drug-toggle-icon{flex-shrink:0;margin-top:2px;color:var(--muted);font-size:10px;transition:transform .2s}
-.drug-header.open .drug-toggle-icon{transform:rotate(90deg)}
-.drug-text{flex:1}
-.drug-name{font-weight:500;color:var(--accent2);font-size:13.5px;line-height:1.4}
-.drug-name .brand{font-weight:400;color:var(--muted);font-size:12px}
-.drug-detail-line{color:#8899bb;font-size:12.5px;margin-top:2px}
-.warn-tag{color:var(--warn);font-size:11px}
-.contra{color:var(--red);font-size:11px}
-.drug-notes{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);background:var(--surface)}
-.drug-notes.open{max-height:3000px;border-top:1px solid var(--border);padding:14px 14px 14px 38px}
-.drug-notes-inner{color:#9aaac8;font-size:12.5px;line-height:1.75}
-.drug-notes-inner p{margin-bottom:8px}
-.no-notes{color:var(--muted);font-size:12px;font-style:italic}
-.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px;font-family:var(--mono)}
-.tag-ped{background:#1a3a4a;color:#5eb8ff}
-.tag-neo{background:#1a2a4a;color:#93c5fd}
-.empty-state{text-align:center;padding:40px;color:var(--muted)}
-footer{text-align:center;padding:16px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
-footer a{color:var(--accent);text-decoration:none}
-#scrollTop{position:fixed;bottom:20px;right:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity .2s;z-index:50}
-#scrollTop.visible{opacity:1}
-mark{background:#1e3a5f;color:var(--accent2);border-radius:2px;padding:0 1px}
+/* ── TOKENS ── */
+:root {
+  --bg: #f0f2f5;
+  --surface: #ffffff;
+  --surface2: #f7f8fa;
+  --border: #e4e8ef;
+  --accent: #1a56db;
+  --accent-light: #e8effe;
+  --accent2: #2563eb;
+  --warn: #d97706;
+  --warn-light: #fef3c7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --green: #059669;
+  --green-light: #d1fae5;
+  --purple: #7c3aed;
+  --purple-light: #ede9fe;
+  --text: #111827;
+  --text2: #4b5563;
+  --text3: #9ca3af;
+  --font: 'Sarabun', sans-serif;
+  --display: 'Syne', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,.05), 0 10px 40px rgba(0,0,0,.1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+
+/* ── HERO SEARCH ── */
+.hero {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  padding: 48px 20px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 20%, rgba(255,255,255,.05) 0%, transparent 50%);
+}
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.5px;
+  margin-bottom: 4px;
+  position: relative;
+}
+.hero-sub {
+  color: rgba(255,255,255,.65);
+  font-size: 13px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.search-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  padding: 16px 56px 16px 20px;
+  border-radius: 16px;
+  border: none;
+  font-family: var(--font);
+  font-size: 16px;
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 8px 32px rgba(0,0,0,.2);
+  outline: none;
+  transition: box-shadow .2s;
+}
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { box-shadow: 0 8px 32px rgba(0,0,0,.25), 0 0 0 3px rgba(255,255,255,.3); }
+.search-icon {
+  position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+  color: var(--text3); font-size: 18px; pointer-events: none;
+}
+.search-count {
+  margin-top: 10px;
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+  position: relative;
+}
+
+/* ── FILTERS ── */
+.filters-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.filters-row {
+  display: flex; gap: 8px; align-items: center;
+  overflow-x: auto; scrollbar-width: none;
+  max-width: 900px; margin: 0 auto;
+}
+.filters-row::-webkit-scrollbar { display: none; }
+.filter-label {
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .8px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.filter-chip {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  color: var(--text2); font-family: var(--font); font-size: 12px;
+  font-weight: 500; padding: 5px 12px; border-radius: 20px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: all .15s; user-select: none;
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+/* ── MAIN CONTENT ── */
+main {
+  max-width: 900px; margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* ── LOADING ── */
+.loading {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 80px 20px; gap: 16px;
+}
+.spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { color: var(--text3); font-size: 14px; }
+
+/* ── DRUG CARD ── */
+.drug-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+  box-shadow: var(--shadow);
+}
+.drug-card:hover { border-color: #c7d7f7; box-shadow: var(--shadow-lg); }
+.drug-card.open { border-color: var(--accent); }
+
+.drug-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  user-select: none;
+}
+.drug-fav {
+  flex-shrink: 0; background: none; border: none;
+  color: var(--text3); font-size: 16px; cursor: pointer;
+  padding: 2px; line-height: 1; transition: color .15s, transform .15s;
+}
+.drug-fav:hover { color: var(--warn); transform: scale(1.2); }
+.drug-fav.active { color: var(--warn); }
+
+.drug-info { flex: 1; min-width: 0; }
+.drug-name-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.drug-name {
+  font-family: var(--display);
+  font-weight: 700; font-size: 15px;
+  color: var(--text); letter-spacing: -.2px;
+}
+.drug-brand { font-size: 12px; color: var(--text3); font-weight: 400; }
+.drug-indication { font-size: 12.5px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.drug-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.tag {
+  font-size: 10px; font-weight: 600; padding: 2px 7px;
+  border-radius: 20px; letter-spacing: .3px;
+  white-space: nowrap;
+}
+.tag-ward { background: var(--accent-light); color: var(--accent2); }
+.tag-ped { background: #dbeafe; color: #1d4ed8; }
+.tag-neo { background: #e0e7ff; color: #4338ca; }
+.tag-high { background: var(--red-light); color: var(--red); }
+.tag-renal { background: #ffedd5; color: #c2410c; }
+.tag-hepatic { background: var(--warn-light); color: var(--warn); }
+.tag-preg-safe { background: var(--green-light); color: var(--green); }
+.tag-preg-avoid { background: var(--red-light); color: var(--red); }
+.tag-icu { background: var(--purple-light); color: var(--purple); }
+.tag-ab { background: #f0fdf4; color: #166534; }
+.tag-baan-g { background: #dcfce7; color: #166534; }
+.tag-baan-kh { background: #dbeafe; color: #1e40af; }
+.tag-baan-k { background: #fef9c3; color: #854d0e; }
+.tag-baan-ng { background: #ffedd5; color: #9a3412; }
+.tag-baan-nok { background: #fce7f3; color: #9d174d; }
+
+.drug-chevron {
+  flex-shrink: 0; color: var(--text3); font-size: 12px;
+  transition: transform .2s;
+}
+.drug-card.open .drug-chevron { transform: rotate(90deg); }
+
+/* ── DRUG DETAIL (EXPANDED) ── */
+.drug-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s cubic-bezier(.4,0,.2,1);
+  border-top: 0 solid var(--border);
+}
+.drug-card.open .drug-detail {
+  max-height: 2000px;
+  border-top-width: 1px;
+}
+.drug-detail-inner { padding: 16px; background: var(--surface2); }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px; margin-bottom: 14px;
+}
+.detail-field { }
+.detail-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--text3); margin-bottom: 3px;
+}
+.detail-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+.detail-value.warn { color: var(--red); }
+
+/* ── PAGE CONTENT (NOTION BLOCKS) ── */
+.page-content { margin-top: 12px; }
+.content-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--text3); margin-bottom: 8px;
+}
+.block-toggle {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden; margin-bottom: 6px;
+  background: var(--surface);
+}
+.block-toggle-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: var(--text);
+  user-select: none;
+}
+.block-toggle-icon { font-size: 9px; color: var(--text3); transition: transform .2s; }
+.block-toggle.open .block-toggle-icon { transform: rotate(90deg); }
+.block-toggle-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s cubic-bezier(.4,0,.2,1);
+  border-top: 0 solid var(--border);
+  padding: 0 12px;
+  font-size: 13px; color: var(--text2); line-height: 1.7;
+}
+.block-toggle.open .block-toggle-body {
+  max-height: 1000px;
+  border-top-width: 1px;
+  padding: 10px 12px;
+}
+.block-bullet { padding: 2px 0; }
+.block-bullet::before { content: '·'; margin-right: 6px; color: var(--text3); }
+.block-paragraph { padding: 4px 0; }
+.loading-inline { color: var(--text3); font-size: 12px; font-style: italic; padding: 8px 0; }
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 60px 20px; color: var(--text3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty h3 { font-size: 16px; color: var(--text2); margin-bottom: 4px; }
+
+/* ── STATUS DOT ── */
+.status { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 8px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.4); }
+.dot.live { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+.dot.error { background: #f87171; }
+.status-text { font-size: 11px; color: rgba(255,255,255,.5); }
+
+/* ── FAV SECTION ── */
+.fav-section { margin-bottom: 20px; }
+.section-title {
+  font-family: var(--display);
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text3); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── LETTER GROUP ── */
+.letter-group { margin-bottom: 4px; }
+.letter-anchor { scroll-margin-top: 60px; }
+
+/* ── SCROLL TOP ── */
+#scrollTop {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  border: none; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(37,99,235,.4);
+  opacity: 0; transition: opacity .2s, transform .2s;
+  z-index: 40;
+}
+#scrollTop.visible { opacity: 1; }
+#scrollTop:hover { transform: translateY(-2px); }
+
+/* ── HIGHLIGHT ── */
+mark { background: #fef08a; color: #713f12; border-radius: 2px; padding: 0 1px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .hero { padding: 36px 16px 32px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  main { padding: 16px 12px 60px; }
+}
 </style>
 </head>
 <body>
-<div class="app">
-<header>
-  <div class="header-top">
-    <div class="logo">รวมยา <span>A–Z</span></div>
-    <div class="status-dot" id="statusDot"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">💊 Drug Reference</div>
+  <div class="hero-sub">ค้นหายาจาก Notion Database</div>
+  <div class="search-wrap">
+    <input class="search-input" id="searchInput" type="text"
+      placeholder="พิมพ์ชื่อยา เช่น amoxicillin, paracetamol..."
+      autocomplete="off" spellcheck="false">
+    <span class="search-icon">⌕</span>
   </div>
-  <div class="search-bar">
-    <span>🔍</span>
-    <input type="text" id="searchInput" placeholder="ค้นหายา เช่น amoxicillin, paracetamol..." autocomplete="off">
+  <div class="status">
+    <div class="dot" id="statusDot"></div>
+    <span class="status-text" id="statusText">กำลังเชื่อมต่อ...</span>
   </div>
-</header>
-<nav class="az-nav" id="azNav"></nav>
+  <div class="search-count" id="searchCount"></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <div class="filters-row" id="filtersRow">
+    <span class="filter-label">Ward</span>
+    <button class="filter-chip active" data-filter="ward" data-value="ALL" onclick="setFilter('ward','ALL',this)">ทั้งหมด</button>
+    <button class="filter-chip" data-filter="ward" data-value="ER" onclick="setFilter('ward','ER',this)">ER</button>
+    <button class="filter-chip" data-filter="ward" data-value="ICU Med" onclick="setFilter('ward','ICU Med',this)">ICU Med</button>
+    <button class="filter-chip" data-filter="ward" data-value="CCU" onclick="setFilter('ward','CCU',this)">CCU</button>
+    <button class="filter-chip" data-filter="ward" data-value="Stroke Unit" onclick="setFilter('ward','Stroke Unit',this)">Stroke</button>
+    <button class="filter-chip" data-filter="ward" data-value="อญ" onclick="setFilter('ward','อญ',this)">อญ</button>
+    <button class="filter-chip" data-filter="ward" data-value="อช" onclick="setFilter('ward','อช',this)">อช</button>
+    <button class="filter-chip" data-filter="ward" data-value="IPD Ped" onclick="setFilter('ward','IPD Ped',this)">IPD Ped</button>
+    <button class="filter-chip" data-filter="ward" data-value="OPD Ped" onclick="setFilter('ward','OPD Ped',this)">OPD Ped</button>
+    <button class="filter-chip" data-filter="ward" data-value="NICU" onclick="setFilter('ward','NICU',this)">NICU</button>
+    <button class="filter-chip" data-filter="ward" data-value="PICU" onclick="setFilter('ward','PICU',this)">PICU</button>
+    <button class="filter-chip" data-filter="ward" data-value="ศช" onclick="setFilter('ward','ศช',this)">ศช</button>
+    <button class="filter-chip" data-filter="ward" data-value="ศญ" onclick="setFilter('ward','ศญ',this)">ศญ</button>
+    <button class="filter-chip" data-filter="ward" data-value="IPD Ortho" onclick="setFilter('ward','IPD Ortho',this)">IPD Ortho</button>
+    <button class="filter-chip" data-filter="ward" data-value="IPD OBGYN" onclick="setFilter('ward','IPD OBGYN',this)">IPD OBGYN</button>
+    <button class="filter-chip" data-filter="ward" data-value="ห้องคลอด" onclick="setFilter('ward','ห้องคลอด',this)">ห้องคลอด</button>
+    <button class="filter-chip" data-filter="ward" data-value="ANC" onclick="setFilter('ward','ANC',this)">ANC</button>
+    <div class="filter-sep"></div>
+    <span class="filter-label">บัญชี</span>
+    <button class="filter-chip" data-filter="baan" data-value="ก" onclick="setFilter('baan','ก',this)">ก</button>
+    <button class="filter-chip" data-filter="baan" data-value="ข" onclick="setFilter('baan','ข',this)">ข</button>
+    <button class="filter-chip" data-filter="baan" data-value="ค" onclick="setFilter('baan','ค',this)">ค</button>
+    <button class="filter-chip" data-filter="baan" data-value="ง" onclick="setFilter('baan','ง',this)">ง</button>
+    <button class="filter-chip" data-filter="baan" data-value="นอกบัญชี" onclick="setFilter('baan','นอกบัญชี',this)">นอกบัญชี</button>
+    <div class="filter-sep"></div>
+    <span class="filter-label">⭐</span>
+    <button class="filter-chip" data-filter="fav" data-value="fav" onclick="setFilter('fav','fav',this)">Favorites</button>
+  </div>
+</div>
+
+<!-- MAIN -->
 <main id="mainContent">
-  <div class="loading-screen" id="loadingScreen">
+  <div class="loading" id="loadingEl">
     <div class="spinner"></div>
-    <div class="loading-text">กำลังโหลดข้อมูลจาก Notion...</div>
+    <p>กำลังโหลดข้อมูลจาก Notion...</p>
   </div>
 </main>
+
 <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<footer>ข้อมูลซิงค์จาก <a href="https://notion.so" target="_blank">Notion</a> · อัพเดตอัตโนมัติทุกครั้งที่เปิด</footer>
-</div>
+
 <script>
-// ← แก้ตรงนี้ถ้าชื่อ Worker เปลี่ยน
-const WORKER = "https://drugref.phuripon2542.workers.dev";
-const PAGE_ID = "3633eb4d-888d-8030-b01c-cc09a88924d0";
+// ── CONFIG ──────────────────────────────────────────────────
+const WORKER   = "https://drugref.phuripon2542.workers.dev";
+const DB_ID    = "77d14d11-e8a8-4d5f-8672-a5819dccf7f2";
 
-let allDrugs = [], filteredDrugs = [], activeLetters = new Set();
-let openId = null, searchQuery = "";
+// ── STATE ───────────────────────────────────────────────────
+let allDrugs = [], filtered = [];
+let activeFilter = { ward: 'ALL', baan: null, fav: false };
+let searchQuery = "";
+let favorites = JSON.parse(localStorage.getItem("drug_favs") || "[]");
+let openCardId = null;
 
+// ── BOOT ────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
-  buildAZNav();
-  await loadData();
-  document.getElementById("searchInput").addEventListener("input", onSearch);
-  window.addEventListener("scroll", () =>
-    document.getElementById("scrollTop").classList.toggle("visible", window.scrollY > 300));
+  await loadDrugs();
+  document.getElementById("searchInput").addEventListener("input", debounce(onSearch, 220));
+  window.addEventListener("scroll", () => {
+    document.getElementById("scrollTop").classList.toggle("visible", window.scrollY > 400);
+  });
 });
 
-// ─── LOAD DATA ─────────────────────────────────────────────
-async function loadData() {
-  const dot = document.getElementById("statusDot");
+// ── LOAD FROM NOTION DB ─────────────────────────────────────
+async function loadDrugs() {
+  const dot  = document.getElementById("statusDot");
+  const txt  = document.getElementById("statusText");
   try {
-    // Step 1: get top-level toggle blocks (A, B, C...)
-    const topBlocks = await apiGet(`/page/${PAGE_ID}`);
-
-    // Step 2: for each letter toggle, fetch its children (drug lines)
-    const drugs = [];
-    let uid = 0;
-    for (const b of topBlocks.results || []) {
-      if (b.type !== "toggle") continue;
-      const letter = getText(b.toggle.rich_text).trim().replace(/[^a-zA-Z]/g, "").charAt(0).toUpperCase();
-      if (!letter) continue;
-
-      // Fetch children of this letter toggle
-      const childData = await apiGet(`/children/${b.id}`);
-      for (const child of childData.results || []) {
-        const drug = parseDrug(child, letter, uid++);
-        if (drug) drugs.push(drug);
-      }
-    }
-
-    allDrugs = drugs;
-    activeLetters = new Set(drugs.map(d => d.letter));
-    dot.className = "status-dot live";
-    filteredDrugs = [...allDrugs];
-    renderAll();
-  } catch (e) {
-    dot.className = "status-dot error";
-    document.getElementById("loadingScreen").innerHTML =
-      `<div style="font-size:32px">⚠️</div>
-       <p style="color:#f87171">โหลดไม่สำเร็จ: ${e.message}</p>
-       <p style="color:#6b7a99;font-size:12px;margin-top:8px">ตรวจสอบ Worker และ Token</p>`;
+    // Use Notion query endpoint via worker
+    const res  = await fetch(`${WORKER}/db/${DB_ID}`);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    allDrugs = (data.results || []).map(parsePage).filter(Boolean);
+    allDrugs.sort((a,b) => a.name.localeCompare(b.name));
+    dot.className = "dot live";
+    txt.textContent = `${allDrugs.length} รายการ`;
+    filtered = [...allDrugs];
+    render();
+  } catch(e) {
+    dot.className = "dot error";
+    txt.textContent = "โหลดไม่สำเร็จ";
+    document.getElementById("mainContent").innerHTML =
+      `<div class="empty"><div class="empty-icon">⚠️</div><h3>เชื่อมต่อไม่ได้</h3><p>${e.message}</p></div>`;
   }
 }
 
-async function apiGet(path) {
-  const res = await fetch(WORKER + path);
-  if (!res.ok) throw new Error("HTTP " + res.status);
-  return res.json();
-}
-
-// ─── PARSE DRUG BLOCK ───────────────────────────────────────
-function parseDrug(block, letter, uid) {
-  const types = ["bulleted_list_item","numbered_list_item","paragraph","toggle"];
-  if (!types.includes(block.type)) return null;
-  const raw = getText(block[block.type]?.rich_text || []);
-  if (!raw.trim()) return null;
-
-  const boldMatch = raw.match(/\*\*(.+?)\*\*/);
-  const brandMatch = raw.match(/\(([^)]+)\)/);
-  const drug = {
-    id: "d" + uid, letter, raw,
-    name: boldMatch ? boldMatch[1] : raw.split(/[\s(]/)[0],
-    brand: brandMatch ? brandMatch[1] : "",
-    isPed: /\[Ped\]/i.test(raw),
-    isNeo: /\[Neonatal\]|\[Neo\]/i.test(raw),
-    blockId: block.id,
-    notesLoaded: false,
-    notes: []
+function parsePage(p) {
+  const props = p.properties || {};
+  const name  = props["Drug Name"]?.title?.[0]?.plain_text || "";
+  if (!name.trim()) return null;
+  return {
+    id:         p.id,
+    name:       name.trim(),
+    brand:      props["Brand Name"]?.rich_text?.[0]?.plain_text || "",
+    dose:       props["Dose & Route"]?.rich_text?.[0]?.plain_text || "",
+    indication: props["Indication"]?.rich_text?.[0]?.plain_text || "",
+    warning:    props["Warning"]?.rich_text?.[0]?.plain_text || "",
+    ward:       (props["Ward"]?.multi_select || []).map(x => x.name),
+    tag:        (props["Tag"]?.multi_select || []).map(x => x.name),
+    baan:       (props["บัญชียา"]?.multi_select || []).map(x => x.name),
+    letter:     props["Letter"]?.select?.name || name[0]?.toUpperCase() || "?",
+    pageId:     p.id,
+    notionUrl:  p.url,
+    blocksLoaded: false,
+    blocks:     []
   };
-  drug.displayLine = raw.replace(/\*\*/g, "")
-    .replace(/⚠️/g, '<span class="warn-tag">⚠️</span>')
-    .replace(/❌/g, '<span class="contra">❌</span>');
-  return drug;
 }
 
-function getText(r) { return (r || []).map(x => x.plain_text || "").join(""); }
-
-// ─── RENDER ─────────────────────────────────────────────────
-function renderAll() {
-  updateAZNav();
-  const main = document.getElementById("mainContent");
-  const byL = {};
-  for (const d of filteredDrugs) {
-    if (!byL[d.letter]) byL[d.letter] = [];
-    byL[d.letter].push(d);
+// ── FILTER ──────────────────────────────────────────────────
+function setFilter(type, value, el) {
+  if (type === 'ward') {
+    document.querySelectorAll('[data-filter="ward"]').forEach(b => b.classList.remove("active"));
+    activeFilter.ward = value;
+    el.classList.add("active");
+    // clear baan & fav
+    document.querySelectorAll('[data-filter="baan"],[data-filter="fav"]').forEach(b => b.classList.remove("active"));
+    activeFilter.baan = null; activeFilter.fav = false;
+  } else if (type === 'baan') {
+    const wasActive = el.classList.contains("active");
+    document.querySelectorAll('[data-filter="baan"]').forEach(b => b.classList.remove("active"));
+    document.querySelectorAll('[data-filter="ward"]').forEach(b => b.classList.remove("active"));
+    document.querySelector('[data-filter="ward"][data-value="ALL"]').classList.add("active");
+    activeFilter.ward = 'ALL'; activeFilter.fav = false;
+    if (!wasActive) { el.classList.add("active"); activeFilter.baan = value; }
+    else activeFilter.baan = null;
+  } else if (type === 'fav') {
+    const wasActive = el.classList.contains("active");
+    document.querySelectorAll('[data-filter="ward"],[data-filter="baan"]').forEach(b => b.classList.remove("active"));
+    document.querySelector('[data-filter="ward"][data-value="ALL"]').classList.add("active");
+    activeFilter.ward = 'ALL'; activeFilter.baan = null;
+    if (!wasActive) { el.classList.add("active"); activeFilter.fav = true; }
+    else { activeFilter.fav = false; }
   }
-  if (!filteredDrugs.length) {
-    main.innerHTML = '<div class="empty-state">💊 ไม่พบยาที่ค้นหา</div>';
+  applyFilter(); render();
+}
+
+function applyFilter() {
+  let list = [...allDrugs];
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(d =>
+      fuzzy(d.name.toLowerCase(), q) ||
+      fuzzy((d.brand||"").toLowerCase(), q) ||
+      (d.indication||"").toLowerCase().includes(q)
+    );
+  }
+  if (activeFilter.fav) {
+    list = list.filter(d => favorites.includes(d.id));
+  } else {
+    if (activeFilter.ward !== 'ALL') {
+      list = list.filter(d => d.ward.includes('ALL') || d.ward.includes(activeFilter.ward));
+    }
+    if (activeFilter.baan) {
+      list = list.filter(d => d.baan.includes(activeFilter.baan));
+    }
+  }
+  filtered = list;
+}
+
+// Simple fuzzy: every char in query appears in order in target
+function fuzzy(str, q) {
+  let si = 0;
+  for (let i = 0; i < str.length && si < q.length; i++) {
+    if (str[i] === q[si]) si++;
+  }
+  return si === q.length;
+}
+
+// ── SEARCH ──────────────────────────────────────────────────
+function onSearch(e) {
+  searchQuery = e.target.value.trim();
+  applyFilter(); render();
+}
+
+// ── RENDER ──────────────────────────────────────────────────
+function render() {
+  const main = document.getElementById("mainContent");
+  const count = document.getElementById("searchCount");
+
+  // Update count
+  if (searchQuery || activeFilter.ward !== 'ALL' || activeFilter.baan || activeFilter.fav) {
+    count.textContent = `พบ ${filtered.length} รายการ`;
+  } else {
+    count.textContent = `${allDrugs.length} รายการทั้งหมด`;
+  }
+
+  if (!filtered.length) {
+    main.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><h3>ไม่พบยาที่ค้นหา</h3><p>ลองค้นหาด้วยคำอื่น</p></div>`;
     return;
   }
-  main.innerHTML = Object.keys(byL).sort().map(L =>
-    `<section class="letter-section" id="sec-${L}">
-      <div class="letter-heading">${L}</div>
-      ${byL[L].map(renderDrug).join("")}
-    </section>`).join("");
-  main.querySelectorAll(".drug-header").forEach(h =>
-    h.addEventListener("click", () => toggleDrug(h.dataset.id)));
+
+  // Favorites section (if any favs in filtered)
+  let html = "";
+  const favDrugs = filtered.filter(d => favorites.includes(d.id));
+  if (favDrugs.length && !searchQuery && activeFilter.ward === 'ALL' && !activeFilter.baan) {
+    html += `<div class="fav-section">`;
+    html += `<div class="section-title">⭐ Favorites</div>`;
+    favDrugs.forEach(d => { html += renderCard(d); });
+    html += `</div>`;
+  }
+
+  // Group by letter
+  const byLetter = {};
+  filtered.forEach(d => {
+    const L = d.letter.toUpperCase();
+    if (!byLetter[L]) byLetter[L] = [];
+    byLetter[L].push(d);
+  });
+
+  Object.keys(byLetter).sort().forEach(L => {
+    html += `<div class="letter-group">`;
+    if (!searchQuery) {
+      html += `<div class="section-title letter-anchor" id="letter-${L}">${L}</div>`;
+    }
+    byLetter[L].forEach(d => { html += renderCard(d); });
+    html += `</div>`;
+  });
+
+  main.innerHTML = html;
+
+  // Attach events
+  main.querySelectorAll(".drug-header").forEach(h => {
+    h.addEventListener("click", () => toggleCard(h.dataset.id));
+  });
+  main.querySelectorAll(".drug-fav").forEach(btn => {
+    btn.addEventListener("click", e => { e.stopPropagation(); toggleFav(btn.dataset.id); });
+  });
+  main.querySelectorAll(".block-toggle-header").forEach(h => {
+    h.addEventListener("click", () => toggleBlock(h.dataset.id));
+  });
 }
 
-function renderDrug(d) {
-  const tags = (d.isPed ? '<span class="tag tag-ped">Ped</span>' : "") +
-               (d.isNeo ? '<span class="tag tag-neo">Neo</span>' : "");
-  return `<div class="drug-item" id="${d.id}">
+function renderCard(d) {
+  const isFav = favorites.includes(d.id);
+  const isOpen = openCardId === d.id;
+  const q = searchQuery.toLowerCase();
+
+  const tagHtml = [
+    ...d.ward.filter(w => w !== 'ALL').map(w => `<span class="tag tag-ward">${w}</span>`),
+    ...d.tag.map(t => tagClass(t)),
+    ...d.baan.map(b => baanClass(b))
+  ].join("");
+
+  const nameHi = q ? highlight(esc(d.name), q) : esc(d.name);
+  const indHi  = q && d.indication ? highlight(esc(d.indication.slice(0,80)), q) : esc((d.indication||"").slice(0,80));
+
+  return `
+<div class="drug-card${isOpen?' open':''}" id="card-${d.id}">
   <div class="drug-header" data-id="${d.id}">
-    <span class="drug-toggle-icon">▶</span>
-    <div class="drug-text">
-      <div class="drug-name">${hi(esc(d.name))}${d.brand ? ` <span class="brand">(${esc(d.brand)})</span>` : ""}${tags}</div>
-      <div class="drug-detail-line">${hi(d.displayLine)}</div>
+    <button class="drug-fav${isFav?' active':''}" data-id="${d.id}" title="Favorite">${isFav?'★':'☆'}</button>
+    <div class="drug-info">
+      <div class="drug-name-row">
+        <span class="drug-name">${nameHi}</span>
+        ${d.brand ? `<span class="drug-brand">${esc(d.brand)}</span>` : ""}
+      </div>
+      ${d.indication ? `<div class="drug-indication">${indHi}${d.indication.length>80?'…':''}</div>` : ""}
+      ${tagHtml ? `<div class="drug-tags">${tagHtml}</div>` : ""}
     </div>
+    <span class="drug-chevron">▶</span>
   </div>
-  <div class="drug-notes" id="notes-${d.id}">
-    <div class="drug-notes-inner" id="notesin-${d.id}">
-      <p class="no-notes">กำลังโหลด note...</p>
+  <div class="drug-detail" id="detail-${d.id}">
+    <div class="drug-detail-inner" id="inner-${d.id}">
+      ${renderDetail(d)}
     </div>
   </div>
 </div>`;
 }
 
-// ─── TOGGLE (lazy-load notes) ───────────────────────────────
-async function toggleDrug(id) {
-  const h = document.querySelector(`.drug-header[data-id="${id}"]`);
-  const n = document.getElementById(`notes-${id}`);
-  const isOpen = h.classList.contains("open");
+function renderDetail(d) {
+  const fields = [
+    d.dose      ? `<div class="detail-field"><div class="detail-label">Dose &amp; Route</div><div class="detail-value">${esc(d.dose)}</div></div>` : "",
+    d.indication? `<div class="detail-field"><div class="detail-label">Indication</div><div class="detail-value">${esc(d.indication)}</div></div>` : "",
+    d.warning   ? `<div class="detail-field"><div class="detail-label">Warning</div><div class="detail-value warn">${esc(d.warning)}</div></div>` : "",
+    d.baan.length? `<div class="detail-field"><div class="detail-label">บัญชียา</div><div class="detail-value">${d.baan.join(', ')}</div></div>` : "",
+  ].filter(Boolean).join("");
 
-  if (openId && openId !== id) {
-    document.querySelector(`.drug-header[data-id="${openId}"]`)?.classList.remove("open");
-    document.getElementById(`notes-${openId}`)?.classList.remove("open");
+  return `
+    <div class="detail-grid">${fields}</div>
+    <div class="page-content" id="pagecontent-${d.id}">
+      <div class="loading-inline">กำลังโหลด note...</div>
+    </div>`;
+}
+
+// ── TOGGLE CARD + LAZY LOAD BLOCKS ──────────────────────────
+async function toggleCard(id) {
+  const card = document.getElementById(`card-${id}`);
+  const isOpen = card.classList.contains("open");
+
+  // Close previous
+  if (openCardId && openCardId !== id) {
+    const prev = document.getElementById(`card-${openCardId}`);
+    if (prev) prev.classList.remove("open");
   }
 
-  h.classList.toggle("open", !isOpen);
-  n.classList.toggle("open", !isOpen);
-  openId = isOpen ? null : id;
+  card.classList.toggle("open", !isOpen);
+  openCardId = isOpen ? null : id;
 
-  // Lazy load notes when opening
+  // Lazy load page blocks
   if (!isOpen) {
     const drug = allDrugs.find(d => d.id === id);
-    if (drug && !drug.notesLoaded) {
-      drug.notesLoaded = true;
+    if (drug && !drug.blocksLoaded) {
+      drug.blocksLoaded = true;
       try {
-        const data = await apiGet(`/children/${drug.blockId}`);
-        const noteBlocks = data.results || [];
-        const notes = noteBlocks
-          .filter(b => ["toggle","bulleted_list_item","paragraph","numbered_list_item"].includes(b.type))
-          .map(b => getText(b[b.type]?.rich_text || []))
-          .filter(t => t.trim());
-        drug.notes = notes;
-        const el = document.getElementById(`notesin-${id}`);
-        if (el) {
-          el.innerHTML = notes.length
-            ? notes.map(n => `<p>${esc(n)}</p>`).join("")
-            : '<p class="no-notes">ยังไม่มี note — เพิ่มใน Notion แล้ว refresh</p>';
-        }
-      } catch(e) {
-        const el = document.getElementById(`notesin-${id}`);
-        if (el) el.innerHTML = '<p class="no-notes">โหลด note ไม่สำเร็จ</p>';
+        const data = await fetch(`${WORKER}/children/${id}`).then(r => r.json());
+        drug.blocks = data.results || [];
+        const el = document.getElementById(`pagecontent-${id}`);
+        if (el) el.innerHTML = renderBlocks(drug.blocks, id);
+        el?.querySelectorAll(".block-toggle-header").forEach(h => {
+          h.addEventListener("click", () => toggleBlock(h.dataset.id));
+        });
+      } catch {
+        const el = document.getElementById(`pagecontent-${id}`);
+        if (el) el.innerHTML = `<div class="loading-inline">โหลด note ไม่สำเร็จ</div>`;
       }
     }
   }
 }
 
-// ─── AZ NAV ─────────────────────────────────────────────────
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-function buildAZNav() {
-  document.getElementById("azNav").innerHTML = LETTERS.map(L =>
-    `<button class="az-btn" id="az-${L}" onclick="jumpTo('${L}')">${L}</button>`).join("");
-}
-function updateAZNav() {
-  LETTERS.forEach(L => {
-    const btn = document.getElementById(`az-${L}`);
-    if (!btn) return;
-    const has = activeLetters.has(L) && filteredDrugs.some(d => d.letter === L);
-    btn.classList.toggle("has-drugs", has);
-    btn.disabled = !has;
-  });
-}
-function jumpTo(L) {
-  LETTERS.forEach(x => document.getElementById(`az-${x}`)?.classList.remove("active"));
-  document.getElementById(`az-${L}`)?.classList.add("active");
-  document.getElementById(`sec-${L}`)?.scrollIntoView({ behavior: "smooth" });
+function renderBlocks(blocks, prefix) {
+  if (!blocks.length) return `<div class="loading-inline">ยังไม่มี note ใน Notion</div>`;
+  const types = ["toggle","bulleted_list_item","paragraph","numbered_list_item","heading_1","heading_2","heading_3"];
+  const html = blocks.filter(b => types.includes(b.type)).map(b => {
+    const text = getText(b[b.type]?.rich_text || []);
+    if (!text.trim()) return "";
+    const bid = prefix + b.id.slice(0,8);
+    if (b.type === "toggle") {
+      return `<div class="block-toggle" id="bt-${bid}">
+        <div class="block-toggle-header" data-id="${bid}">
+          <span class="block-toggle-icon">▶</span>
+          <span>${esc(text)}</span>
+        </div>
+        <div class="block-toggle-body">${renderBlocks(b.children||[], bid)}</div>
+      </div>`;
+    }
+    if (b.type === "bulleted_list_item") return `<div class="block-bullet">${esc(text)}</div>`;
+    return `<div class="block-paragraph">${esc(text)}</div>`;
+  }).join("");
+  return html || `<div class="loading-inline">ยังไม่มี note</div>`;
 }
 
-// ─── SEARCH ─────────────────────────────────────────────────
-function onSearch(e) {
-  searchQuery = e.target.value.trim().toLowerCase();
-  filteredDrugs = searchQuery
-    ? allDrugs.filter(d =>
-        d.name.toLowerCase().includes(searchQuery) ||
-        d.brand.toLowerCase().includes(searchQuery) ||
-        d.raw.toLowerCase().includes(searchQuery))
-    : [...allDrugs];
-  openId = null;
-  renderAll();
+function toggleBlock(id) {
+  const el = document.getElementById(`bt-${id}`);
+  if (el) el.classList.toggle("open");
 }
-function hi(t) {
-  if (!searchQuery) return t;
-  return t.replace(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"), "<mark>$1</mark>");
+
+// ── FAV ─────────────────────────────────────────────────────
+function toggleFav(id) {
+  const idx = favorites.indexOf(id);
+  if (idx >= 0) favorites.splice(idx, 1);
+  else favorites.push(id);
+  localStorage.setItem("drug_favs", JSON.stringify(favorites));
+  // Update button only
+  const btn = document.querySelector(`.drug-fav[data-id="${id}"]`);
+  if (btn) {
+    const isFav = favorites.includes(id);
+    btn.classList.toggle("active", isFav);
+    btn.textContent = isFav ? '★' : '☆';
+  }
 }
+
+// ── HELPERS ─────────────────────────────────────────────────
+function getText(r) { return (r||[]).map(x => x.plain_text||"").join(""); }
 function esc(s) {
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function highlight(text, q) {
+  if (!q) return text;
+  const esc_q = q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  return text.replace(new RegExp(`(${esc_q})`,"gi"),"<mark>$1</mark>");
+}
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+function tagClass(t) {
+  const map = {
+    'Ped':'tag-ped','Neonatal':'tag-neo','High Alert':'tag-high',
+    'Renal Adjust':'tag-renal','Hepatic Caution':'tag-hepatic',
+    'Pregnancy Safe':'tag-preg-safe','Pregnancy Avoid':'tag-preg-avoid',
+    'ICU':'tag-icu','Antibiotic':'tag-ab'
+  };
+  return `<span class="tag ${map[t]||'tag-ward'}">${t}</span>`;
+}
+function baanClass(b) {
+  const map = {'ก':'tag-baan-g','ข':'tag-baan-kh','ค':'tag-baan-k','ง':'tag-baan-ng','นอกบัญชี':'tag-baan-nok'};
+  return `<span class="tag ${map[b]||''}">${b}</span>`;
 }
 </script>
 </body>
